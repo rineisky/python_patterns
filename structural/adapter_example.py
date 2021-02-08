@@ -1,11 +1,11 @@
 class GameConsole:
     def create_game_picture(self):
-        return 'picture from console'
+        return f'picture from console'
 
 
 class Antenna:
-    def create_wave_picture(self):
-        return 'picture from wave'
+    def create_antenna_picture(self):
+        return f'picture from antenna'
 
 
 class SourceGameConsole(GameConsole):
@@ -15,7 +15,7 @@ class SourceGameConsole(GameConsole):
 
 class SourceAntenna(Antenna):
     def get_picture(self):
-        return self.create_wave_picture()
+        return self.create_antenna_picture()
 
 
 class TV:
@@ -26,9 +26,10 @@ class TV:
         return self.source.get_picture()
 
 
-g = SourceGameConsole()
-a = SourceAntenna()
-game_tv = TV(g)
-cabel_tv = TV(a)
-print(game_tv.show_picture())
-print(cabel_tv.show_picture())
+if __name__ == '__main__':
+    g = SourceGameConsole()
+    a = SourceAntenna()
+    game_picture = TV(g)
+    antenna_picture = TV(a)
+    print(game_picture.show_picture())
+    print(antenna_picture.show_picture())

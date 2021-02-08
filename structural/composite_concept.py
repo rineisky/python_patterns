@@ -1,4 +1,3 @@
-from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List
 
@@ -8,43 +7,27 @@ class Component(ABC):
     Базовый класс Компонент объявляет общие операции как для простых, так и для
     сложных объектов структуры.
     """
+    _parent: 'Component'
 
     @property
-    def parent(self) -> Component:
+    def parent(self) -> 'Component':
         return self._parent
 
     @parent.setter
-    def parent(self, parent: Component):
+    def parent(self, parent: 'Component'):
         """
         При необходимости базовый Компонент может объявить интерфейс для
         установки и получения родителя компонента в древовидной структуре. Он
         также может предоставить некоторую реализацию по умолчанию для этих
         методов.
         """
-
         self._parent = parent
 
-    """
-    В некоторых случаях целесообразно определить операции управления потомками
-    прямо в базовом классе Компонент. Таким образом, вам не нужно будет
-    предоставлять конкретные классы компонентов клиентскому коду, даже во время
-    сборки дерева объектов. Недостаток такого подхода в том, что эти методы
-    будут пустыми для компонентов уровня листа.
-    """
-
-    def add(self, component: Component) -> None:
+    def add(self, component: 'Component') -> None:
         pass
 
-    def remove(self, component: Component) -> None:
+    def remove(self, component: 'Component') -> None:
         pass
-
-    def is_composite(self) -> bool:
-        """
-        Вы можете предоставить метод, который позволит клиентскому коду понять,
-        может ли компонент иметь вложенные объекты.
-        """
-
-        return False
 
     @abstractmethod
     def operation(self) -> str:
@@ -53,8 +36,14 @@ class Component(ABC):
         или поручить это конкретным классам, объявив метод, содержащий поведение
         абстрактным.
         """
-
         pass
+
+    def is_composite(self) -> bool:
+        """
+        Вы можете предоставить метод, который позволит клиентскому коду понять,
+        может ли компонент иметь вложенные объекты.
+        """
+        return False
 
 
 class Leaf(Component):
@@ -67,7 +56,7 @@ class Leaf(Component):
     """
 
     def operation(self) -> str:
-        return "Leaf"
+        return "Лист"
 
 
 class Composite(Component):
@@ -76,9 +65,10 @@ class Composite(Component):
     компоненты. Обычно объекты Контейнеры делегируют фактическую работу своим
     детям, а затем «суммируют» результат.
     """
+    _children: List[Component]
 
     def __init__(self) -> None:
-        self._children: List[Component] = []
+        self._children = []
 
     """
     Объект контейнера может как добавлять компоненты в свой список вложенных
@@ -107,15 +97,14 @@ class Composite(Component):
         results = []
         for child in self._children:
             results.append(child.operation())
-        return f"Branch({'+'.join(results)})"
+        return f"Ветка({'+'.join(results)})"
 
 
 def client_code(component: Component) -> None:
     """
     Клиентский код работает со всеми компонентами через базовый интерфейс.
     """
-
-    print(f"RESULT: {component.operation()}", end="")
+    print(f"RESULT: {component.operation()}")
 
 
 def client_code2(component1: Component, component2: Component) -> None:
@@ -124,37 +113,30 @@ def client_code2(component1: Component, component2: Component) -> None:
     Компонента, клиентский код может работать как с простыми, так и со сложными
     компонентами, вне зависимости от их конкретных классов.
     """
-
     if component1.is_composite():
         component1.add(component2)
 
-    print(f"RESULT: {component1.operation()}", end="")
+    print(f"RESULT: {component1.operation()}")
 
 
 if __name__ == "__main__":
-    # Таким образом, клиентский код может поддерживать простые компоненты-
-    # листья...
     simple = Leaf()
-    print("Client: I've got a simple component:")
+    print("Client: я могу получить простой компонент:")
     client_code(simple)
     print("\n")
 
-    # ...а также сложные контейнеры.
     tree = Composite()
-
     branch1 = Composite()
     branch1.add(Leaf())
     branch1.add(Leaf())
-
     branch2 = Composite()
     branch2.add(Leaf())
-
     tree.add(branch1)
     tree.add(branch2)
-
-    print("Client: Now I've got a composite tree:")
+    print("Client: я могу получить сложный компонент:")
     client_code(tree)
     print("\n")
 
-    print("Client: I don't need to check the components classes even when managing the tree:")
+    print("Client: мне не надо проверять типы классов компонентов, "
+          "когда я работаю с деревом:")
     client_code2(tree, simple)

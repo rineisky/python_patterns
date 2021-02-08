@@ -1,9 +1,13 @@
-class Component():
+from abc import ABC, abstractmethod
+
+
+class Component(ABC):
     """
     Базовый интерфейс Компонента определяет поведение, которое изменяется
     декораторами.
     """
 
+    @abstractmethod
     def operation(self) -> str:
         pass
 
@@ -33,11 +37,10 @@ class Decorator(Component):
         self._component = component
 
     @property
-    def component(self) -> str:
+    def component(self) -> Component:
         """
         Декоратор делегирует всю работу обёрнутому компоненту.
         """
-
         return self._component
 
     def operation(self) -> str:
@@ -75,12 +78,7 @@ def client_code(component: Component) -> None:
     Таким образом, он остаётся независимым от конкретных классов компонентов, с
     которыми работает.
     """
-
-    # ...
-
     print(f"RESULT: {component.operation()}", end="")
-
-    # ...
 
 
 if __name__ == "__main__":

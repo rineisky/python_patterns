@@ -4,7 +4,7 @@ class Target:
     """
 
     def request(self) -> str:
-        return "Target: The default target's behavior."
+        return "Target: стандартное поведение"
 
 
 class Adaptee:
@@ -15,38 +15,40 @@ class Adaptee:
     """
 
     def specific_request(self) -> str:
-        return ".eetpadA eht fo roivaheb laicepS"
+        return "еинедевоп еончифицепс"
 
 
-class Adapter(Target, Adaptee):
+class Adapter(Target):
     """
     Адаптер делает интерфейс Адаптируемого класса совместимым с целевым
-    интерфейсом благодаря множественному наследованию.
+    интерфейсом благодаря агрегации.
     """
 
+    def __init__(self, adaptee: Adaptee) -> None:
+        self.adaptee = adaptee
+
     def request(self) -> str:
-        return f"Adapter: (TRANSLATED) {self.specific_request()[::-1]}"
+        return f"Adapter: (TRANSLATED) {self.adaptee.specific_request()[::-1]}"
 
 
-def client_code(target: "Target") -> None:
+def client_code(target: Target) -> None:
     """
     Клиентский код поддерживает все классы, использующие интерфейс Target.
     """
-
-    print(target.request(), end="")
+    print(target.request())
 
 
 if __name__ == "__main__":
-    print("Client: I can work just fine with the Target objects:")
-    target = Target()
-    client_code(target)
+    print("Client: я могу работать с Target объектами")
+    tg = Target()
+    client_code(tg)
     print("\n")
 
-    adaptee = Adaptee()
-    print("Client: The Adaptee class has a weird interface. "
-          "See, I don't understand it:")
-    print(f"Adaptee: {adaptee.specific_request()}", end="\n\n")
+    adt = Adaptee()
+    print("Client: у класса Adaptee не подходящий интерфейс")
+    print(f"Adaptee: {adt.specific_request()}")
+    print("\n")
 
-    print("Client: But I can work with it via the Adapter:")
-    adapter = Adapter()
+    print("Client: но я могу работать с ним через Adapter")
+    adapter = Adapter(adt)
     client_code(adapter)

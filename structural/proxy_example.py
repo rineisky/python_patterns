@@ -12,6 +12,7 @@ class IMath:
     def div(self, x, y):
         raise NotImplementedError()
 
+
 class Math(IMath):
     """Реальный субъект"""
     def add(self, x, y):
@@ -26,6 +27,7 @@ class Math(IMath):
     def div(self, x, y):
         return x / y
 
+
 class Proxy(IMath):
     """Прокси"""
     def __init__(self):
@@ -37,6 +39,7 @@ class Proxy(IMath):
 
     def sub(self, x, y):
         return x - y
+
     # Медленная операция - требует создания реального субъекта
     def mul(self, x, y):
         if not self.math:
@@ -45,14 +48,15 @@ class Proxy(IMath):
 
     def div(self, x, y):
         if y == 0:
-            return float('inf') # Вернуть positive infinity
+            return float('inf')
         if not self.math:
             self.math = Math()
         return self.math.div(x, y)
 
+
 p = Proxy()
-x, y = 4, 2
-print('4 + 2 = ' + str(p.add(x, y)))
-print('4 - 2 = ' + str(p.sub(x, y)))
-print('4 * 2 = ' + str(p.mul(x, y)))
-print('4 / 2 = ' + str(p.div(x, y)))
+xxx, yyy = 4, 2
+print('4 + 2 = ' + str(p.add(xxx, yyy)))
+print('4 - 2 = ' + str(p.sub(xxx, yyy)))
+print('4 * 2 = ' + str(p.mul(xxx, yyy)))
+print('4 / 2 = ' + str(p.div(xxx, yyy)))

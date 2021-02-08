@@ -23,7 +23,7 @@ class RealSubject(Subject):
     """
 
     def request(self) -> None:
-        print("RealSubject: Handling request.")
+        print("RealSubject: Обработка запроса.")
 
 
 class Proxy(Subject):
@@ -31,8 +31,8 @@ class Proxy(Subject):
     Интерфейс Заместителя идентичен интерфейсу Реального Субъекта.
     """
 
-    def __init__(self, real_subject: RealSubject) -> None:
-        self._real_subject = real_subject
+    def __init__(self, r_sub: RealSubject) -> None:
+        self._real_subject = r_sub
 
     def request(self) -> None:
         """
@@ -48,11 +48,11 @@ class Proxy(Subject):
             self.log_access()
 
     def check_access(self) -> bool:
-        print("Proxy: Checking access prior to firing a real request.")
+        print("Proxy: проверка прав доступа перед обработкой запроса.")
         return True
 
     def log_access(self) -> None:
-        print("Proxy: Logging the time of request.", end="")
+        print("Proxy: логгирование информации запроса.", end="")
 
 
 def client_code(subject: Subject) -> None:
@@ -64,12 +64,7 @@ def client_code(subject: Subject) -> None:
     реализации паттерна, можно расширить заместителя из класса реального
     субъекта.
     """
-
-    # ...
-
     subject.request()
-
-    # ...
 
 
 if __name__ == "__main__":

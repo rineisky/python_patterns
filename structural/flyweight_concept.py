@@ -2,7 +2,7 @@ import json
 from typing import Dict
 
 
-class Flyweight():
+class Flyweight:
     """
     Легковес хранит общую часть состояния (также называемую внутренним
     состоянием), которая принадлежит нескольким реальным бизнес-объектам.
@@ -10,16 +10,16 @@ class Flyweight():
     для каждого объекта) через его параметры метода.
     """
 
-    def __init__(self, shared_state: str) -> None:
+    def __init__(self, shared_state) -> None:
         self._shared_state = shared_state
 
-    def operation(self, unique_state: str) -> None:
+    def operation(self, unique_state) -> None:
         s = json.dumps(self._shared_state)
         u = json.dumps(unique_state)
-        print(f"Flyweight: Displaying shared ({s}) and unique ({u}) state.", end="")
+        print(f"Flyweight: shared ({s}) and unique ({u}) state.", end="")
 
 
-class FlyweightFactory():
+class FlyweightFactory:
     """
     Фабрика Легковесов создает объекты-Легковесы и управляет ими. Она
     обеспечивает правильное разделение легковесов. Когда клиент запрашивает
@@ -29,18 +29,18 @@ class FlyweightFactory():
 
     _flyweights: Dict[str, Flyweight] = {}
 
-    def __init__(self, initial_flyweights: Dict) -> None:
+    def __init__(self, initial_flyweights) -> None:
         for state in initial_flyweights:
             self._flyweights[self.get_key(state)] = Flyweight(state)
 
-    def get_key(self, state: Dict) -> str:
+    @staticmethod
+    def get_key(state) -> str:
         """
         Возвращает хеш строки Легковеса для данного состояния.
         """
+        return "_".join(state)
 
-        return "_".join(sorted(state))
-
-    def get_flyweight(self, shared_state: Dict) -> Flyweight:
+    def get_flyweight(self, shared_state) -> Flyweight:
         """
         Возвращает существующий Легковес с заданным состоянием или создает
         новый.
@@ -78,22 +78,20 @@ if __name__ == "__main__":
     Клиентский код обычно создает кучу предварительно заполненных легковесов на
     этапе инициализации приложения.
     """
-
     factory = FlyweightFactory([
         ["Chevrolet", "Camaro2018", "pink"],
-        ["Mercedes Benz", "C300", "black"],
-        ["Mercedes Benz", "C500", "red"],
+        ["Mercedes-Benz", "C300", "black"],
+        ["Mercedes-Benz", "C500", "red"],
         ["BMW", "M5", "red"],
         ["BMW", "X6", "white"],
     ])
-
     factory.list_flyweights()
 
     add_car_to_police_database(
-        factory, "CL234IR", "James Doe", "BMW", "M5", "red")
+        factory, "CL234IR", "John Doe", "BMW", "M5", "red")
 
     add_car_to_police_database(
-        factory, "CL234IR", "James Doe", "BMW", "X1", "red")
+        factory, "CL234IR", "John Doe", "BMW", "X1", "red")
 
     print("\n")
 
