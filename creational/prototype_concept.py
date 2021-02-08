@@ -10,13 +10,6 @@ class SelfReferencingEntity:
 
 
 class SomeComponent:
-    """
-    Python provides its own interface of Prototype via `copy.copy` and
-    `copy.deepcopy` functions. And any class that wants to implement custom
-    implementations have to override `__copy__` and `__deepcopy__` member
-    functions.
-    """
-
     def __init__(self, some_int, some_list_of_objects, some_circular_ref):
         self.some_int = some_int
         self.some_list_of_objects = some_list_of_objects
@@ -70,7 +63,6 @@ class SomeComponent:
 
 
 if __name__ == "__main__":
-
     list_of_objects = [1, {1, 2, 3}, [1, 2, 3]]
     circular_ref = SelfReferencingEntity()
     component = SomeComponent(23, list_of_objects, circular_ref)

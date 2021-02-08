@@ -1,49 +1,4 @@
-from __future__ import annotations
 from abc import ABC, abstractmethod
-
-
-class AbstractFactory(ABC):
-    """
-    Интерфейс Абстрактной Фабрики объявляет набор методов, которые возвращают
-    различные абстрактные продукты. Эти продукты называются семейством и связаны
-    темой или концепцией высокого уровня. Продукты одного семейства обычно могут
-    взаимодействовать между собой. Семейство продуктов может иметь несколько
-    вариаций, но продукты одной вариации несовместимы с продуктами другой.
-    """
-    @abstractmethod
-    def create_product_a(self) -> AbstractProductA:
-        pass
-
-    @abstractmethod
-    def create_product_b(self) -> AbstractProductB:
-        pass
-
-
-class ConcreteFactory1(AbstractFactory):
-    """
-    Конкретная Фабрика производит семейство продуктов одной вариации. Фабрика
-    гарантирует совместимость полученных продуктов. Обратите внимание, что
-    сигнатуры методов Конкретной Фабрики возвращают абстрактный продукт, в то
-    время как внутри метода создается экземпляр конкретного продукта.
-    """
-
-    def create_product_a(self) -> AbstractProductA:
-        return ConcreteProductA1()
-
-    def create_product_b(self) -> AbstractProductB:
-        return ConcreteProductB1()
-
-
-class ConcreteFactory2(AbstractFactory):
-    """
-    Каждая Конкретная Фабрика имеет соответствующую вариацию продукта.
-    """
-
-    def create_product_a(self) -> AbstractProductA:
-        return ConcreteProductA2()
-
-    def create_product_b(self) -> AbstractProductB:
-        return ConcreteProductB2()
 
 
 class AbstractProductA(ABC):
@@ -55,11 +10,6 @@ class AbstractProductA(ABC):
     @abstractmethod
     def useful_function_a(self) -> str:
         pass
-
-
-"""
-Конкретные продукты создаются соответствующими Конкретными Фабриками.
-"""
 
 
 class ConcreteProductA1(AbstractProductA):
@@ -96,11 +46,6 @@ class AbstractProductB(ABC):
         pass
 
 
-"""
-Конкретные Продукты создаются соответствующими Конкретными Фабриками.
-"""
-
-
 class ConcreteProductB1(AbstractProductB):
     def useful_function_b(self) -> str:
         return "The result of the product B1."
@@ -129,6 +74,48 @@ class ConcreteProductB2(AbstractProductB):
         return f"The result of the B2 collaborating with the ({result})"
 
 
+class AbstractFactory(ABC):
+    """
+    Интерфейс Абстрактной Фабрики объявляет набор методов, которые возвращают
+    различные абстрактные продукты. Эти продукты называются семейством и связаны
+    темой или концепцией высокого уровня. Продукты одного семейства обычно могут
+    взаимодействовать между собой. Семейство продуктов может иметь несколько
+    вариаций, но продукты одной вариации несовместимы с продуктами другой.
+    """
+    @abstractmethod
+    def create_product_a(self) -> AbstractProductA:
+        pass
+
+    @abstractmethod
+    def create_product_b(self) -> AbstractProductB:
+        pass
+
+
+class ConcreteFactory1(AbstractFactory):
+    """
+    Конкретная Фабрика производит семейство продуктов одной вариации. Фабрика
+    гарантирует совместимость полученных продуктов. Обратите внимание, что
+    сигнатуры методов Конкретной Фабрики возвращают абстрактный продукт, в то
+    время как внутри метода создается экземпляр конкретного продукта.
+    """
+    def create_product_a(self) -> AbstractProductA:
+        return ConcreteProductA1()
+
+    def create_product_b(self) -> AbstractProductB:
+        return ConcreteProductB1()
+
+
+class ConcreteFactory2(AbstractFactory):
+    """
+    Каждая Конкретная Фабрика имеет соответствующую вариацию продукта.
+    """
+    def create_product_a(self) -> AbstractProductA:
+        return ConcreteProductA2()
+
+    def create_product_b(self) -> AbstractProductB:
+        return ConcreteProductB2()
+
+
 def client_code(factory: AbstractFactory) -> None:
     """
     Клиентский код работает с фабриками и продуктами только через абстрактные
@@ -143,13 +130,8 @@ def client_code(factory: AbstractFactory) -> None:
 
 
 if __name__ == "__main__":
-    """
-    Клиентский код может работать с любым конкретным классом фабрики.
-    """
     print("Client: Testing client code with the first factory type:")
     client_code(ConcreteFactory1())
-
     print("\n")
-
     print("Client: Testing the same client code with the second factory type:")
     client_code(ConcreteFactory2())
