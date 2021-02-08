@@ -1,4 +1,3 @@
-from __future__ import annotations
 from abc import ABC, abstractmethod
 
 
@@ -21,8 +20,21 @@ class SimpleCommand(Command):
         self._payload = payload
 
     def execute(self) -> None:
-        print(f"SimpleCommand: See, I can do simple things like printing"
-              f"({self._payload})")
+        print(f"SimpleCommand: выполнение простой команды ({self._payload})")
+
+
+class Receiver:
+    """
+    Классы Получателей содержат некую важную бизнес-логику. Они умеют выполнять
+    все виды операций, связанных с выполнением запроса. Фактически, любой класс
+    может выступать Получателем.
+    """
+
+    def do_something(self, a: str) -> None:
+        print(f"\nReceiver: работаю над ({a})", end="")
+
+    def do_something_else(self, b: str) -> None:
+        print(f"\nReceiver: также работаю над ({b})", end="")
 
 
 class ComplexCommand(Command):
@@ -36,7 +48,6 @@ class ComplexCommand(Command):
         Сложные команды могут принимать один или несколько объектов-получателей
         вместе с любыми данными о контексте через конструктор.
         """
-
         self._receiver = receiver
         self._a = a
         self._b = b
@@ -45,24 +56,9 @@ class ComplexCommand(Command):
         """
         Команды могут делегировать выполнение любым методам получателя.
         """
-
-        print("ComplexCommand: Complex stuff should be done by a receiver object", end="")
+        print("ComplexCommand: сложная команда будет делегирована Receiver", end="")
         self._receiver.do_something(self._a)
         self._receiver.do_something_else(self._b)
-
-
-class Receiver:
-    """
-    Классы Получателей содержат некую важную бизнес-логику. Они умеют выполнять
-    все виды операций, связанных с выполнением запроса. Фактически, любой класс
-    может выступать Получателем.
-    """
-
-    def do_something(self, a: str) -> None:
-        print(f"\nReceiver: Working on ({a}.)", end="")
-
-    def do_something_else(self, b: str) -> None:
-        print(f"\nReceiver: Also working on ({b}.)", end="")
 
 
 class Invoker:
@@ -73,10 +69,6 @@ class Invoker:
 
     _on_start = None
     _on_finish = None
-
-    """
-    Инициализация команд.
-    """
 
     def set_on_start(self, command: Command):
         self._on_start = command
@@ -90,13 +82,13 @@ class Invoker:
         Отправитель передаёт запрос получателю косвенно, выполняя команду.
         """
 
-        print("Invoker: Does anybody want something done before I begin?")
+        print("Invoker: выполнение команд до начала отправки инвокером?")
         if isinstance(self._on_start, Command):
             self._on_start.execute()
 
-        print("Invoker: ...doing something really important...")
+        print("Invoker: ...выполняю важную работу...")
 
-        print("Invoker: Does anybody want something done after I finish?")
+        print("Invoker: выполнение команд после инвокера?")
         if isinstance(self._on_finish, Command):
             self._on_finish.execute()
 
@@ -109,7 +101,5 @@ if __name__ == "__main__":
     invoker = Invoker()
     invoker.set_on_start(SimpleCommand("Say Hi!"))
     receiver = Receiver()
-    invoker.set_on_finish(ComplexCommand(
-        receiver, "Send email", "Save report"))
-
+    invoker.set_on_finish(ComplexCommand(receiver, "Send email", "Save report"))
     invoker.do_something_important()

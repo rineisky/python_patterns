@@ -7,15 +7,9 @@ class Troop:
     """
 
     def move(self, direction: str) -> None:
-        """
-        Начать движение в определенном направлении
-        """
-        print('Отряд начал движение {}'.format(direction))
+        print(f'Отряд начал движение {direction}')
 
     def stop(self) -> None:
-        """
-        Остановиться
-        """
         print('Отряд остановился')
 
 
@@ -26,30 +20,19 @@ class Command(metaclass=ABCMeta):
 
     @abstractmethod
     def execute(self) -> None:
-        """
-        Приступить к выполнению команды
-        """
         pass
 
     @abstractmethod
     def unexecute(self) -> None:
-        """
-        Отменить выполнение команды
-        """
         pass
 
 
 class AttackCommand(Command):
     """
-    Команда для выплнения атаки
+    Команда для выполнения атаки
     """
 
     def __init__(self, troop: Troop) -> None:
-        """
-        Constructor.
-
-        :param troop: отряд, с которым ассоциируется команда
-        """
         self.troop = troop
 
     def execute(self) -> None:
@@ -65,11 +48,6 @@ class RetreatCommand(Command):
     """
 
     def __init__(self, troop: Troop) -> None:
-        """
-        Constructor.
-
-        :param troop: отряд, с которым ассоциируется команда
-        """
         self.troop = troop
 
     def execute(self) -> None:
@@ -86,14 +64,12 @@ class TroopInterface:
 
     def __init__(self, attack: AttackCommand, retreat: RetreatCommand) -> None:
         """
-        Constructor.
-
         :param attack: команда для выполнения атаки
         :param retreat: команда для выполнения отступления
         """
         self.attack_command = attack
         self.retreat_command = retreat
-        self.current_command = None  # команда, выполняющаяся в данный момент
+        self.current_command = None
 
     def attack(self) -> None:
         self.current_command = self.attack_command

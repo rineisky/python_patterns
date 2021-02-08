@@ -1,9 +1,32 @@
-from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List
 
 
-class Context():
+class Strategy(ABC):
+    """
+    Интерфейс Стратегии объявляет операции, общие для всех поддерживаемых версий
+    некоторого алгоритма.
+
+    Контекст использует этот интерфейс для вызова алгоритма, определённого
+    Конкретными Стратегиями.
+    """
+
+    @abstractmethod
+    def do_algorithm(self, data: List):
+        pass
+
+
+class ConcreteStrategyA(Strategy):
+    def do_algorithm(self, data: List) -> List:
+        return sorted(data)
+
+
+class ConcreteStrategyB(Strategy):
+    def do_algorithm(self, data: List) -> List:
+        return sorted(data, reverse=True)
+
+
+class Context:
     """
     Контекст определяет интерфейс, представляющий интерес для клиентов.
     """
@@ -39,56 +62,16 @@ class Context():
         Вместо того, чтобы самостоятельно реализовывать множественные версии
         алгоритма, Контекст делегирует некоторую работу объекту Стратегии.
         """
-
-        # ...
-
         print("Context: Sorting data using the strategy (not sure how it'll do it)")
         result = self._strategy.do_algorithm(["a", "b", "c", "d", "e"])
         print(",".join(result))
 
-        # ...
-
-
-class Strategy(ABC):
-    """
-    Интерфейс Стратегии объявляет операции, общие для всех поддерживаемых версий
-    некоторого алгоритма.
-
-    Контекст использует этот интерфейс для вызова алгоритма, определённого
-    Конкретными Стратегиями.
-    """
-
-    @abstractmethod
-    def do_algorithm(self, data: List):
-        pass
-
-
-"""
-Конкретные Стратегии реализуют алгоритм, следуя базовому интерфейсу Стратегии.
-Этот интерфейс делает их взаимозаменяемыми в Контексте.
-"""
-
-
-class ConcreteStrategyA(Strategy):
-    def do_algorithm(self, data: List) -> List:
-        return sorted(data)
-
-
-class ConcreteStrategyB(Strategy):
-    def do_algorithm(self, data: List) -> List:
-        return reversed(sorted(data))
-
 
 if __name__ == "__main__":
-    # Клиентский код выбирает конкретную стратегию и передаёт её в контекст.
-    # Клиент должен знать о различиях между стратегиями, чтобы сделать
-    # правильный выбор.
-
     context = Context(ConcreteStrategyA())
     print("Client: Strategy is set to normal sorting.")
     context.do_some_business_logic()
-    print()
-
+    print('')
     print("Client: Strategy is set to reverse sorting.")
     context.strategy = ConcreteStrategyB()
     context.do_some_business_logic()

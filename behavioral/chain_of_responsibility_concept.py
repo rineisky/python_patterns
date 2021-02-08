@@ -1,4 +1,3 @@
-from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 
@@ -10,7 +9,7 @@ class Handler(ABC):
     """
 
     @abstractmethod
-    def set_next(self, handler: Handler) -> Handler:
+    def set_next(self, handler: 'Handler') -> 'Handler':
         pass
 
     @abstractmethod
@@ -34,11 +33,9 @@ class AbstractHandler(Handler):
         return handler
 
     @abstractmethod
-    def handle(self, request: Any) -> str:
+    def handle(self, request: Any) -> Optional[str]:
         if self._next_handler:
             return self._next_handler.handle(request)
-
-        return None
 
 
 """

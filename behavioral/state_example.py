@@ -1,8 +1,7 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 
 
-class State(metaclass=ABCMeta):
-
+class State(ABC):
     @abstractmethod
     def eat(self) -> str:
         pass
@@ -21,7 +20,6 @@ class State(metaclass=ABCMeta):
 
 
 class SleepState(State):
-
     def eat(self) -> str:
         return 'не может есть, пока спит'
 
@@ -36,22 +34,21 @@ class SleepState(State):
 
 
 class OnGroundState(State):
-
     def eat(self) -> str:
         return 'вываливает на пузо добытых моллюсков и начинает неспешно их есть'
 
     def find_food(self) -> str:
-        return 'находит дурно пахнущую, но вполне съедобную тушу выбросившегося на берег кита'
+        return 'находит дурно пахнущую, но вполне съедобную тушу ' \
+               'выбросившегося на берег кита'
 
     def move(self) -> str:
         return 'неуклюже ползет вдоль береговой линии'
 
     def dream(self) -> str:
-        return 'на мгновние останавливается, замечтавшись об одной знакомой самке'
+        return 'на мгновение останавливается, замечтавшись об одной знакомой самке'
 
 
 class InWaterState(State):
-
     def eat(self) -> str:
         return 'не может есть в воде'
 
@@ -65,13 +62,15 @@ class InWaterState(State):
         return 'не спит и не мечтает в воде - это слишком сложно'
 
 
-class Walrus:
+class WalrusContext:
+    _state: State
 
     def __init__(self, state: State) -> None:
-        self._state = state
+        self.change_state(state)
 
     def change_state(self, state: State) -> None:
         self._state = state
+        self._state.context = self
 
     def eat(self) -> None:
         self._execute('eat')
@@ -97,8 +96,7 @@ if __name__ == '__main__':
     sleep = SleepState()
     on_ground = OnGroundState()
     in_water = InWaterState()
-    walrus = Walrus(on_ground)
-    print('OUTPUT:')
+    walrus = WalrusContext(on_ground)
     walrus.change_state(in_water)
     walrus.move()
     walrus.find_food()
@@ -108,13 +106,3 @@ if __name__ == '__main__':
     walrus.dream()
     walrus.change_state(sleep)
     walrus.dream()
-
-'''
-OUTPUT:
-Морж грациозно рассекает волны мирового океана.
-Морж вспахивает бивнями морское дно, вылавливая моллюсков своими вибриссами.
-Морж вываливает на пузо добытых моллюсков и начинает неспешно их есть.
-Морж неуклюже ползет вдоль береговой линии.
-Морж на мгновние останавливается, замечтавшись об одной знакомой самке.
-Морж спит и видит чудный сон.
-'''
