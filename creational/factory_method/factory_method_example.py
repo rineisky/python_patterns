@@ -7,7 +7,7 @@ class Government(ABC):
 
     @abstractmethod
     def set_name(self):
-        raise NotImplementedError
+        pass
 
     def __init__(self):
         self.set_name()
@@ -31,12 +31,11 @@ class GovernmentCreator(ABC):
     government: Government
 
     def __str__(self):
-        return self.government.__str__()
+        return str(self.government)
 
     @abstractmethod
     def set_government(self):
-        """Фабричный метод, который создает некоторую форму правления"""
-        raise AttributeError('Not Implemented Culture')
+        pass
 
 
 class MonarchyGovernment(GovernmentCreator):

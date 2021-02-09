@@ -71,8 +71,8 @@ if __name__ == '__main__':
     wooden_table = wooden_factory.create_table()
     wooden_chair = wooden_factory.create_chair()
     about_my_furniture(wooden_table, wooden_chair)
-
-    print('Покупаем пластиковую мебель для улицы')
+    print('\n')
+    print('Покупаем пластиковую мебель для улицы:')
     plastic_table = plastic_factory.create_table()
     plastic_chair = plastic_factory.create_chair()
     about_my_furniture(plastic_table, plastic_chair)

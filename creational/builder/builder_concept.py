@@ -1,31 +1,30 @@
+"""
+Паттерн Строитель актуален только тогда, когда ваши продукты
+достаточно сложны, состоят из многих частей и требуют обширной конфигурации.
+
+Основное отличие паттерна Builder от других порождающих паттернов - то, что различные
+конкретные строители могут создавать несвязные друг с другом продукты.
+По простому - различные строители не обязаны следовать одному общему интерфейсу.
+"""
 from abc import ABC, abstractmethod
-from typing import Any
 
 
 class Product:
-    """
-    Имеет смысл использовать паттерн Строитель только тогда, когда ваши продукты
-    достаточно сложны и требуют обширной конфигурации.
-
-    В отличие от других порождающих паттернов, различные конкретные строители
-    могут производить несвязанные продукты. Другими словами, результаты
-    различных строителей могут не всегда следовать одному и тому же интерфейсу.
-    """
+    """Некоторый сложный объект, который состоит из множества частей"""
 
     def __init__(self) -> None:
         self.parts = []
 
-    def add(self, part: Any) -> None:
+    def add(self, part) -> None:
         self.parts.append(part)
 
     def list_parts(self) -> None:
-        print(f"Product parts: {', '.join(self.parts)}")
+        print(f"Продукт состоит из: {', '.join(self.parts)}")
 
 
 class Builder(ABC):
     """
-    Интерфейс Строителя объявляет создающие методы для различных частей объектов
-    Продуктов.
+    Интерфейс строителя объявляет создающие методы для различных частей продукта
     """
     @property
     @abstractmethod
@@ -33,23 +32,23 @@ class Builder(ABC):
         pass
 
     @abstractmethod
-    def produce_part_a(self) -> None:
+    def create_part_a(self) -> None:
         pass
 
     @abstractmethod
-    def produce_part_b(self) -> None:
+    def create_part_b(self) -> None:
         pass
 
     @abstractmethod
-    def produce_part_c(self) -> None:
+    def create_part_c(self) -> None:
         pass
 
 
 class ConcreteBuilder(Builder):
     """
-    Классы Конкретного Строителя следуют интерфейсу Строителя и предоставляют
-    конкретные реализации шагов построения. Ваша программа может иметь несколько
-    вариантов Строителей, реализованных по-разному.
+    Классы конкретных строителей следуют интерфейсу строителя и предоставляют
+    конкретные реализации шагов построения.
+    В программе может быть несколько строителей, реализованных по-разному.
     """
     _product: Product
 
@@ -69,14 +68,11 @@ class ConcreteBuilder(Builder):
         Конкретные Строители должны предоставить свои собственные методы
         получения результатов. Это связано с тем, что различные типы строителей
         могут создавать совершенно разные продукты с разными интерфейсами.
-        Поэтому такие методы не могут быть объявлены в базовом интерфейсе
-        Строителя (по крайней мере, в статически типизированном языке
-        программирования).
 
         Как правило, после возвращения конечного результата клиенту, экземпляр
         строителя должен быть готов к началу производства следующего продукта.
         Поэтому обычной практикой является вызов метода сброса в конце тела
-        метода getProduct. Однако такое поведение не является обязательным, вы
+        метода get_product. Однако такое поведение не является обязательным, вы
         можете заставить своих строителей ждать явного запроса на сброс из кода
         клиента, прежде чем избавиться от предыдущего результата.
         """
@@ -84,14 +80,14 @@ class ConcreteBuilder(Builder):
         self.reset()
         return product
 
-    def produce_part_a(self) -> None:
-        self._product.add("PartA1")
+    def create_part_a(self) -> None:
+        self._product.add("Часть А")
 
-    def produce_part_b(self) -> None:
-        self._product.add("PartB1")
+    def create_part_b(self) -> None:
+        self._product.add("Часть B")
 
-    def produce_part_c(self) -> None:
-        self._product.add("PartC1")
+    def create_part_c(self) -> None:
+        self._product.add("Часть C")
 
 
 class Director:
@@ -107,12 +103,12 @@ class Director:
         self.builder = builder
 
     def build_minimal_viable_product(self) -> None:
-        self.builder.produce_part_a()
+        self.builder.create_part_a()
 
     def build_full_featured_product(self) -> None:
-        self.builder.produce_part_a()
-        self.builder.produce_part_b()
-        self.builder.produce_part_c()
+        self.builder.create_part_a()
+        self.builder.create_part_b()
+        self.builder.create_part_c()
 
 
 if __name__ == "__main__":
@@ -123,20 +119,20 @@ if __name__ == "__main__":
     """
     c_builder = ConcreteBuilder()
     director = Director(c_builder)
-    print("Standard basic product: ")
+    print("Базовая комплектация продукта: ")
     director.build_minimal_viable_product()
     c_builder.product.list_parts()
 
     print("\n")
 
-    print("Standard full featured product: ")
+    print("Полная комплектация продукта: ")
     director.build_full_featured_product()
     c_builder.product.list_parts()
 
     print("\n")
 
     # Помните, что паттерн Строитель можно использовать без класса Директор.
-    print("Custom product: ")
-    c_builder.produce_part_a()
-    c_builder.produce_part_b()
+    print("Создаем продукт без директора: ")
+    c_builder.create_part_a()
+    c_builder.create_part_b()
     c_builder.product.list_parts()

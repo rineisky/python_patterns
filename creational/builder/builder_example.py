@@ -1,3 +1,7 @@
+"""
+У нас есть завод, который производит сковородки. Он может делать 2 вида
+товаров: сковорода, сковорода с крышкой
+"""
 from abc import ABC, abstractmethod
 
 
@@ -25,13 +29,25 @@ class Builder(ABC):
 
 
 class PanBuilder(Builder):
-    pan: Pan
+    _pan: Pan
+
+    def __init__(self):
+        self.reset()
+
+    @property
+    def pan(self):
+        pan = self._pan
+        self.reset()
+        return pan
+
+    def reset(self):
+        self._pan = Pan()
 
     def produce_cap(self) -> None:
-        self.pan.add_part('крышка')
+        self._pan.add_part('крышка')
 
     def produce_pan(self) -> None:
-        self.pan.add_part('сковорода')
+        self._pan.add_part('сковорода')
 
 
 class Director:
@@ -41,12 +57,10 @@ class Director:
         self.builder = builder
 
     def build_pan_with_cap(self):
-        self.builder.pan = Pan()
         self.builder.produce_pan()
         self.builder.produce_cap()
 
     def build_pan(self):
-        self.builder.pan = Pan()
         self.builder.produce_pan()
 
 
@@ -55,6 +69,5 @@ if __name__ == '__main__':
     director = Director(pan_builder)
     director.build_pan()
     pan_builder.pan.list_parts()
-
     director.build_pan_with_cap()
     pan_builder.pan.list_parts()
