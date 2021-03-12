@@ -1,11 +1,25 @@
-from __future__ import annotations
 from abc import ABC, abstractmethod
 from datetime import datetime
 from random import sample
 from string import ascii_letters, digits
 
 
-class Originator():
+class Memento(ABC):
+    """
+    Интерфейс Снимка предоставляет способ извлечения метаданных снимка, таких
+    как дата создания или название. Однако он не раскрывает состояние Создателя.
+    """
+
+    @abstractmethod
+    def get_name(self) -> str:
+        pass
+
+    @abstractmethod
+    def get_date(self) -> str:
+        pass
+
+
+class Originator:
     """
     Создатель содержит некоторое важное состояние, которое может со временем
     меняться. Он также объявляет метод сохранения состояния внутри снимка и
@@ -32,7 +46,7 @@ class Originator():
         self._state = self._generate_random_string(30)
         print(f"Originator: and my state has changed to: {self._state}")
 
-    def _generate_random_string(self, length: int = 10) -> None:
+    def _generate_random_string(self, length: int = 10):
         return "".join(sample(ascii_letters, length))
 
     def save(self) -> Memento:
@@ -49,21 +63,6 @@ class Originator():
 
         self._state = memento.get_state()
         print(f"Originator: My state has changed to: {self._state}")
-
-
-class Memento(ABC):
-    """
-    Интерфейс Снимка предоставляет способ извлечения метаданных снимка, таких
-    как дата создания или название. Однако он не раскрывает состояние Создателя.
-    """
-
-    @abstractmethod
-    def get_name(self) -> str:
-        pass
-
-    @abstractmethod
-    def get_date(self) -> str:
-        pass
 
 
 class ConcreteMemento(Memento):

@@ -45,9 +45,8 @@ class MilitaryBase(MilitaryFacility):
         self._nuclear_submarines = 1
 
     def __repr__(self) -> str:
-        return 'На военной базе находится {} атомных подводных лодок и {} секретных чертежей'.format(
-            self._nuclear_submarines, self._secret_draftings
-        )
+        return f'На военной базе находится {self._nuclear_submarines} ' \
+               f'атомных подводных лодок и {self._secret_draftings} секретных чертежей'
 
     def accept(self, spy: Spy) -> None:
         spy.visit_military_base(self)

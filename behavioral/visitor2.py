@@ -1,4 +1,3 @@
-from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List
 
@@ -10,7 +9,7 @@ class Component(ABC):
     """
 
     @abstractmethod
-    def accept(self, visitor: Visitor) -> None:
+    def accept(self, visitor: 'Visitor') -> None:
         pass
 
 
@@ -20,7 +19,7 @@ class ConcreteComponentA(Component):
     чтобы он вызывал метод посетителя, соответствующий классу компонента.
     """
 
-    def accept(self, visitor: Visitor) -> None:
+    def accept(self, visitor: 'Visitor') -> None:
         """
         Обратите внимание, мы вызываем visitConcreteComponentA, что
         соответствует названию текущего класса. Таким образом мы позволяем
@@ -44,7 +43,7 @@ class ConcreteComponentB(Component):
     То же самое здесь: visitConcreteComponentB => ConcreteComponentB
     """
 
-    def accept(self, visitor: Visitor):
+    def accept(self, visitor: 'Visitor'):
         visitor.visit_concrete_component_b(self)
 
     def special_method_of_concrete_component_b(self) -> str:
@@ -100,11 +99,8 @@ def client_code(components: List[Component], visitor: Visitor) -> None:
     элементов, не выясняя их конкретных классов. Операция принятия направляет
     вызов к соответствующей операции в объекте посетителя.
     """
-
-    # ...
     for component in components:
         component.accept(visitor)
-    # ...
 
 
 if __name__ == "__main__":
